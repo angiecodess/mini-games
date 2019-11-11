@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Guess the number!</title>
+	<link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+<body>
+	<h1>Number guessing game</h1>
+
+	<p>The computer has generated a number between 1 and 100. See if you can guess it in 10 turns or fewer. </p>
+
+	<div class="form">
+		<label for="guessField">Enter your guess: </label><input type="text" id="guessField" class="guessField">
+		<input type="submit" value="Submit" class="guessSubmit">
+	</div>
+
+	<div class="resultParas">
+		<p class="guesses"></p>
+		<p class="result"></p>
+	</div>
+
+	<script>
+		var random = Math.floor(Math.random() * 100) + 1;
+		const guesses = document.querySelector('.guesses');
+		const result = document.querySelector('.result');
+		const guessSubmit = document.querySelector('.guessSubmit');
+		const guessField = document.querySelector('.guessField');
+		var guessCount = 1;
+		var reset;
+		function check() {
+			var userGuess = Number(guessField.value);
+			if (guessCount == 1) {
+				guesses.innerHTML = 'Previous guesses: ';
+			}
+			guesses.innerHTML += userGuess + ' ';
+			if (userGuess == random) {
+				result.textContent = 'Congratulations! You got it right!';
+				result.style.backgroundColor = 'green';
+				setGameOver();
+			} else if (guessCount == 10) {
+				result.innerHTML = 'Game Over. Try again.';
+				setGameOver();
+			} else {
+				result.style.backgroundColor = 'red';
+				if(userGuess < random) {
+					result.innerHTML = 'Last guess was too low!' ;
+				} else  {
+					result.innerHTML = 'Last guess was too high!' ;
+				}
+			}
+			guessCount++;
+			guessField.value = '';
+			guessField.focus();
+		}
+		guessSubmit.addEventListener('click', check);
+
+
+		function setGameOver() {
+			guessField.disabled = true;
+			guessSubmit.disabled = true;
+			reset = document.createElement('button');
+			reset.innerHTML = 'Start new game';
+			document.body.appendChild(reset);
+			reset.addEventListener('click', resetGame);
+		}
+
+		function resetGame() {
+			guessCount = 1;
+			const resetParas = document.querySelectorAll('.resultParas p');
+			for(var i = 0 ; i < resetParas.length ; i++) {
+				resetParas[i].innerHTML = '';
+			}
+			reset.parentNode.removeChild(reset);
+			guessField.disabled = false;
+			guessSubmit.disabled = false;
+			guessField.value = '';
+			guessField.focus();
+			result.style.backgroundColor = 'white';
+			random = Math.floor(Math.random() * 100) + 1;
+		}
+
+	</script>
+</body>
+</html>
